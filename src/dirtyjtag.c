@@ -41,7 +41,14 @@ void clean_nvic(void) {
 
 int main(void) {
   /* Clock init */
+  #if PLATFORM == HW_blackpill
+  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
+  rcc_periph_clock_enable(RCC_SYSCFG);
+  #else
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
+  rcc_periph_clock_enable(RCC_AFIO);
+  #endif
+
 
 //   /* ST-Link v2 specific */
 // #if PLATFORM == HW_stlinkv2dfu
@@ -67,7 +74,6 @@ int main(void) {
   rcc_periph_clock_enable(RCC_GPIOA);
   rcc_periph_clock_enable(RCC_GPIOB);
   rcc_periph_clock_enable(RCC_GPIOC);
-  rcc_periph_clock_enable(RCC_AFIO);
   rcc_periph_clock_enable(RCC_TIM2);
 
   /* Olimex STM32-H103 specific */
@@ -78,18 +84,27 @@ int main(void) {
 #endif
 
   /* Disable DirtyJTAG's own JTAG interface */
+#if PLATFORM != HW_blackpill
   AFIO_MAPR |= AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON;
+#endif
 
   /* Force USB to reenumerate (bootloader exit, SWD flashing, etc.) */
   usb_reenumerate();
+
+  #if PLATFORM == HW_blackpill
+  rcc_periph_reset_pulse(RST_SYSCFG);
+  rcc_periph_reset_pulse(RST_OTGFS);
+
+  #else
   rcc_periph_reset_pulse(RST_AFIO);
-  rcc_periph_reset_pulse(RST_GPIOA);
   rcc_periph_reset_pulse(RST_USB);
+  #endif
+  rcc_periph_reset_pulse(RST_GPIOA);
 
 
 
   /* Turn on the onboard LED */
-#if PLATFORM == HW_bluepill
+#if PLATFORM == (HW_bluepill || HW_blackpill)
   gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ,
     GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
   gpio_set(GPIOC, GPIO13);

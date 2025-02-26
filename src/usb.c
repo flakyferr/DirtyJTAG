@@ -28,6 +28,7 @@
 #include "delay.h"
 #include "cmd.h"
 #include "usb.h"
+#include "jtag.h"
 
 #define DIRTYJTAG_USB_BUFFER_SIZE 64
 
@@ -245,7 +246,16 @@ void usb_init(void) {
   usbd_device *usbd_dev;
 
   usb_read_serial();
-
+  #if PLATFORM == HW_blackpill
+    /* USB device initialisation */
+    usbd_dev = usbd_init(USBD_STM32_OTG_FS, NULL, &info);
+    usbd_register_set_config_callback(usbd_dev, usb_set_config);
+    usbd_register_setup_callback(usbd_dev, usb_control_request);
+  
+    while (1) {
+      usbd_poll(usbd_dev, 0);
+    }
+  #else
   /* USB device initialisation */
   usbd_dev = usbd_init(USBD_STM32_FSDEV, NULL, &info);
   usbd_register_set_config_callback(usbd_dev, usb_set_config);
@@ -254,11 +264,19 @@ void usb_init(void) {
   while (1) {
     usbd_poll(usbd_dev, 0);
   }
+  #endif
 }
 
 void usb_reenumerate(void) {
+  #if PLATFORM == HW_blackpill
+  gpio_mode_setup(GPIOA,
+    GPIO_MODE_OUTPUT,
+    GPIO_PUPD_NONE,
+    GPIO12);
+  #else
   gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ,
 		GPIO_CNF_OUTPUT_OPENDRAIN, GPIO12);
+  #endif
   gpio_clear(GPIOA, GPIO12);
 
   delay_us(20000);

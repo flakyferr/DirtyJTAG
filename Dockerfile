@@ -9,6 +9,7 @@ ADD . /dirtyjtag
 WORKDIR /dirtyjtag
 
 RUN make PLATFORM=bluepill
+RUN make PLATFORM=blackpill
 RUN make PLATFORM=stlinkv2
 RUN make PLATFORM=stlinkv2dfu
 RUN make PLATFORM=baite

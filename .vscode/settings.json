@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.am": "makefile",
+        "rcc.h": "c",
+        "pwr.h": "c",
+        "flash.h": "c",
+        "gpio.h": "c",
+        "gpio_common_f24.h": "c",
+        "jtag.h": "c",
+        "spi.h": "c"
+    }
+}

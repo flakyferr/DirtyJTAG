@@ -76,6 +76,20 @@
 #define JTAG_PORT_TRST GPIOB
 #define JTAG_PIN_TRST GPIO1
 
+#elif PLATFORM == HW_blackpill
+
+#define JTAG_PORT_TDI GPIOA
+#define JTAG_PIN_TDI GPIO7
+
+#define JTAG_PORT_TDO GPIOA
+#define JTAG_PIN_TDO GPIO6
+
+#define JTAG_PORT_TCK GPIOB
+#define JTAG_PIN_TCK GPIO13
+
+#define JTAG_PORT_TMS GPIOB
+#define JTAG_PIN_TMS GPIO14
+
 #else /* Blue Pill platform (default) */
 
 #define JTAG_PORT_TDI GPIOA
@@ -107,7 +121,12 @@
 
 void jtag_init(void) {
   /* GPIO configuration */
-
+#if PLATFORM == HW_blackpill
+  gpio_mode_setup(JTAG_PORT_TCK,
+		GPIO_MODE_OUTPUT,
+		GPIO_PUPD_NONE,
+		JTAG_PIN_TCK | JTAG_PIN_TDI | JTAG_PIN_TDO | JTAG_PIN_TMS);
+#else
   gpio_set_mode(JTAG_PORT_TCK,
 		GPIO_MODE_OUTPUT_50_MHZ,
 		GPIO_CNF_OUTPUT_PUSHPULL,
@@ -124,6 +143,7 @@ void jtag_init(void) {
 		GPIO_MODE_OUTPUT_50_MHZ,
 		GPIO_CNF_OUTPUT_PUSHPULL,
 		JTAG_PIN_TMS);
+#endif
 #ifdef JTAG_PORT_SRST
   gpio_set_mode(JTAG_PORT_SRST,
     GPIO_MODE_OUTPUT_50_MHZ,
@@ -401,10 +421,17 @@ void jtag_transfer(uint16_t length, const uint8_t *in, uint8_t *out) {
     /* Set TMS low during transfer */
     jtag_set_tms(0);
     //set the pins in SPI mode
+    #if PLATFORM == HW_blackpill
+    gpio_mode_setup(JTAG_PORT_TCK,
+      GPIO_MODE_OUTPUT,
+      GPIO_PUPD_NONE,
+      JTAG_PIN_TCK | JTAG_PIN_TDI);
+    #else
     gpio_set_mode(JTAG_PORT_TCK,
       GPIO_MODE_OUTPUT_50_MHZ,
       GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
       JTAG_PIN_TCK | JTAG_PIN_TDI);
+    #endif
     while (xfer_out_i < byte_length)
     {
 
@@ -422,11 +449,19 @@ void jtag_transfer(uint16_t length, const uint8_t *in, uint8_t *out) {
       }
 
     }
+
+    #if PLATFORM == HW_blackpill
+    gpio_mode_setup(JTAG_PORT_TCK,
+      GPIO_MODE_OUTPUT,
+      GPIO_PUPD_NONE,
+      JTAG_PIN_TCK | JTAG_PIN_TDI);
+    #else
     //set pins in GPIO mode
     gpio_set_mode(JTAG_PORT_TCK,
       GPIO_MODE_OUTPUT_50_MHZ,
       GPIO_CNF_OUTPUT_PUSHPULL,
       JTAG_PIN_TCK | JTAG_PIN_TDI);
+    #endif
   }
 
   if (remaining_length) {

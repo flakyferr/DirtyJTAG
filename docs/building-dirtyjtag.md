@@ -33,6 +33,7 @@ make -f Makefile.stm32f1 PLATFORM=bluepill LOADER=noloader
 `PLATFORM` could be any of the following:
 
  * `bluepill`
+ * `blackpill`
  * `stlinkv2`
  * `stlinkv2white`
  * `baite`

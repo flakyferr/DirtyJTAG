@@ -109,8 +109,9 @@ bool jtag_strobe(uint8_t pulses, bool tms, bool tdi);
 #define HW_olimexstm32h103 1
 #define HW_baite 2
 #define HW_stlinkv2white 3
+#define HW_blackpill 4
 
-#if (PLATFORM == HW_bluepill)  || (PLATFORM == HW_stlinkv2white)
+#if (PLATFORM == HW_bluepill)  || (PLATFORM == HW_stlinkv2white) || ((PLATFORM == HW_blackpill))
 #define USE_SPI1 1
 #else
 #define USE_SPI1 0

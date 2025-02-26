@@ -24,6 +24,7 @@ jobs:
     - name: Build
       run: |
         make PLATFORM=bluepill
+        make PLATFORM=blackpill
         make PLATFORM=stlinkv2
         make PLATFORM=stlinkv2dfu
         make PLATFORM=baite
