@@ -19,7 +19,7 @@
   OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <unicore-mx/usbd/usbd.h>
+#include <libopencm3/usb/usbd.h>
 
 #define DIRTYJTAG_READ_ENDPOINT 0x01
 #define DIRTYJTAG_WRITE_ENDPOINT 0x82

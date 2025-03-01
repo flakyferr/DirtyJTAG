@@ -20,9 +20,9 @@
 */
 
 #include <stdlib.h>
-#include <unicore-mx/usbd/usbd.h>
-#include <unicore-mx/stm32/gpio.h>
-#include <unicore-mx/stm32/rcc.h>
+#include <libopencm3/usb/usbd.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
 
 
 #include "delay.h"

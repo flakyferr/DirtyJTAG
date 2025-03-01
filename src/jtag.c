@@ -21,10 +21,11 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <unicore-mx/stm32/gpio.h>
-#include <unicore-mx/stm32/timer.h>
-#include <unicore-mx/cm3/nvic.h>
-#include <unicore-mx/stm32/spi.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/timer.h>
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/spi.h>
+#include <libopencm3/stm32/rcc.h>
 
 #include "jtag.h"
 
@@ -179,7 +180,7 @@ void jtag_init(void) {
 
 #if USE_SPI1
   /* SPI1 init */
-  spi_reset(SPI1);
+  rcc_periph_reset_pulse(RST_SPI1);
   spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_8, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE, SPI_CR1_CPHA_CLK_TRANSITION_1,
                   SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
   spi_enable_software_slave_management(SPI1);
@@ -187,7 +188,7 @@ void jtag_init(void) {
   spi_enable(SPI1);
 #endif
   /* TIMER2 init */
-  timer_reset(TIM2);
+  rcc_periph_reset_pulse(RST_TIM2);
 
   timer_set_mode(TIM2,
                  TIM_CR1_CKD_CK_INT,

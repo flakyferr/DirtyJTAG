@@ -19,8 +19,8 @@
   OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <unicore-mx/cm3/systick.h>
-#include <unicore-mx/stm32/gpio.h>
+#include <libopencm3/cm3/systick.h>
+#include <libopencm3/stm32/gpio.h>
 #include <stdint.h>
 
 static volatile bool wait_for_irq;

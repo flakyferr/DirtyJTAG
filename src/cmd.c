@@ -22,8 +22,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <unicore-mx/usbd/usbd.h>
-#include <unicore-mx/stm32/gpio.h>
+#include <libopencm3/usb/usbd.h>
+#include <libopencm3/stm32/gpio.h>
 
 #include "jtag.h"
 #include "usb.h"

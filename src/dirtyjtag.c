@@ -19,10 +19,10 @@
   OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <unicore-mx/stm32/rcc.h>
-#include <unicore-mx/stm32/gpio.h>
-#include <unicore-mx/stm32/iwdg.h>
-#include <unicore-mx/cm3/nvic.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/iwdg.h>
+#include <libopencm3/cm3/nvic.h>
 
 #include "jtag.h"
 #include "usb.h"
@@ -42,7 +42,7 @@ void clean_nvic(void) {
 int main(void) {
   /* Clock init */
   #if PLATFORM == HW_blackpill
-  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
+  rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
   rcc_periph_clock_enable(RCC_SYSCFG);
   #else
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
